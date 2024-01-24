@@ -7,29 +7,28 @@ public class TrainController : MonoBehaviour
     public float acceleration = 5f;
     public float deceleration = 5f;
     public float friction = 1f;
-    public float minimumSafeDistance = 5f; // Minimum safe distance
+    public float minimumSafeDistance = 5f;
 
     private float currentSpeed = 0f;
-    private bool isMovingRight = true;
     private bool isStopping = false;
+    public bool autoAccelerate = true;
 
     void Update()
     {
-        HandleInput();
+        if (autoAccelerate)
+        {
+            AutomaticAcceleration();
+        }
         ApplyFriction();
         MoveTrain();
         AutomaticStopCheck();
     }
 
-    void HandleInput()
+    void AutomaticAcceleration()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (currentSpeed < maxSpeed)
         {
             currentSpeed += acceleration * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            currentSpeed -= deceleration * Time.deltaTime;
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
@@ -37,7 +36,7 @@ public class TrainController : MonoBehaviour
 
     void ApplyFriction()
     {
-        if (currentSpeed > 0 && !Input.GetKey(KeyCode.W))
+        if (currentSpeed > 0 && !isStopping)
         {
             currentSpeed -= friction * Time.deltaTime;
             currentSpeed = Mathf.Max(currentSpeed, 0);
@@ -57,6 +56,7 @@ public class TrainController : MonoBehaviour
         if (distanceToTarget <= dynamicSafeDistance && !isStopping)
         {
             isStopping = true;
+            autoAccelerate = false; // Disable automatic acceleration
             StartCoroutine(StopTrain());
         }
     }
@@ -70,11 +70,11 @@ public class TrainController : MonoBehaviour
         }
         currentSpeed = 0;
         isStopping = false;
+        //autoAccelerate = true; // Re-enable automatic acceleration if needed
     }
 
     float CalculateDynamicSafeDistance()
     {
-        // Assuming safe distance is proportional to the square of the speed
         return minimumSafeDistance + currentSpeed * currentSpeed / (2 * deceleration);
     }
 
