@@ -19,6 +19,11 @@ public class TrainController : MonoBehaviour
         {
             AutomaticAcceleration();
         }
+        else
+        {
+            KeyAccelerate();
+        }
+
         ApplyFriction();
         MoveTrain();
         AutomaticStopCheck();
@@ -29,6 +34,20 @@ public class TrainController : MonoBehaviour
         if (currentSpeed < maxSpeed)
         {
             currentSpeed += acceleration * Time.deltaTime;
+        }
+
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
+    }
+
+    void KeyAccelerate()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            currentSpeed += acceleration * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            currentSpeed -= deceleration * Time.deltaTime;
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
