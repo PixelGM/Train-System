@@ -346,7 +346,7 @@ Transform:
   m_GameObject: {fileID: 828831218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.267024, y: 1.055, z: -0.019}
+  m_LocalPosition: {x: 14.7, y: 1.055, z: -0.019}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -438,7 +438,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.14491932, y: 1.1792998e-18, z: -0.000000017275728, w: 0.9894435}
-  m_LocalPosition: {x: 0.66, y: 8.89, z: -25.11}
+  m_LocalPosition: {x: 15.03, y: 18.74, z: -41.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -545,7 +545,7 @@ Transform:
   m_GameObject: {fileID: 1144084326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9898, y: 0.7912, z: 0}
+  m_LocalPosition: {x: -4.9, y: 0.7912, z: 0}
   m_LocalScale: {x: 2.9797, y: 1.4824, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -590,15 +590,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c02f4b70b38d9ef42b75338b98bbbd2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 50
   targetObject: {fileID: 828831218}
-  Velocity: 0
-  MaxVelocity: 1
-  Acc: 0
-  AccAdd: 1000
-  MaxAcc: 1000
-  MinAcc: -10
-  decelerationDistance: 5
+  maxSpeed: 10
+  acceleration: 50
+  deceleration: 5
+  friction: 1
+  minimumSafeDistance: 3
+  autoAccelerate: 0
 --- !u!1 &1454191579
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,8 +831,8 @@ Transform:
   m_GameObject: {fileID: 1870723166}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8193, y: -0, z: 0.0348}
-  m_LocalScale: {x: 19.556318, y: 0.1, z: 0.9303}
+  m_LocalPosition: {x: 16.106, y: -0, z: 0.0348}
+  m_LocalScale: {x: 50.13067, y: 0.1, z: 0.9303}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
