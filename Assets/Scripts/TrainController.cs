@@ -7,9 +7,10 @@ public class TrainController : MonoBehaviour
     public float acceleration = 5f;
     public float deceleration = 5f;
     public float friction = 1f;
-    public float safeDistance = 10f;
+    public float minimumSafeDistance = 5f; // Minimum safe distance
 
     private float currentSpeed = 0f;
+    private bool isMovingRight = true;
     private bool isStopping = false;
 
     void Update()
@@ -50,8 +51,10 @@ public class TrainController : MonoBehaviour
 
     void AutomaticStopCheck()
     {
+        float dynamicSafeDistance = CalculateDynamicSafeDistance();
         float distanceToTarget = Vector3.Distance(transform.position, targetObject.transform.position);
-        if (distanceToTarget <= safeDistance && !isStopping)
+
+        if (distanceToTarget <= dynamicSafeDistance && !isStopping)
         {
             isStopping = true;
             StartCoroutine(StopTrain());
@@ -67,5 +70,17 @@ public class TrainController : MonoBehaviour
         }
         currentSpeed = 0;
         isStopping = false;
+    }
+
+    float CalculateDynamicSafeDistance()
+    {
+        // Assuming safe distance is proportional to the square of the speed
+        return minimumSafeDistance + currentSpeed * currentSpeed / (2 * deceleration);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, CalculateDynamicSafeDistance());
     }
 }
