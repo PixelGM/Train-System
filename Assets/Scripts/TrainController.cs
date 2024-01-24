@@ -2,40 +2,70 @@ using UnityEngine;
 
 public class TrainController : MonoBehaviour
 {
-    public float turnSpeed = 50f;
+    public GameObject targetObject;
+    public float maxSpeed = 10f;
+    public float acceleration = 5f;
+    public float deceleration = 5f;
+    public float friction = 1f;
+    public float safeDistance = 10f;
 
-    public float Velocity = 0.0f;      // Current Travelling Velocity
-    public float MaxVelocity = 1.0f;   // Maxima Velocity
-    public float Acc = 0.0f;           // Current Acceleration
-    public float AccAdd = 0.1f;        // Amount to increase Acceleration with.
-    public float MaxAcc = 1.0f;        // Max Acceleration
-    public float MinAcc = -1.0f;       // Min Acceleration
+    private float currentSpeed = 0f;
+    private bool isStopping = false;
 
     void Update()
     {
-        // Detect single key press for acceleration
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            Acc += AccAdd;
+        HandleInput();
+        ApplyFriction();
+        MoveTrain();
+        AutomaticStopCheck();
+    }
 
-        // Detect single key press for deceleration
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-            Acc -= AccAdd;
+    void HandleInput()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            currentSpeed += acceleration * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            currentSpeed -= deceleration * Time.deltaTime;
+        }
 
-        // Continuous rotation while key is held down
-        if (Input.GetKey(KeyCode.LeftArrow))
-            transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
+    }
 
-        if (Input.GetKey(KeyCode.RightArrow))
-            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
+    void ApplyFriction()
+    {
+        if (currentSpeed > 0 && !Input.GetKey(KeyCode.W))
+        {
+            currentSpeed -= friction * Time.deltaTime;
+            currentSpeed = Mathf.Max(currentSpeed, 0);
+        }
+    }
 
-        // Clamp acceleration within limits
-        Acc = Mathf.Clamp(Acc, MinAcc, MaxAcc);
+    void MoveTrain()
+    {
+        transform.Translate(Vector3.right * currentSpeed * Time.deltaTime);
+    }
 
-        // Update velocity
-        Velocity += Acc;
-        Velocity = Mathf.Clamp(Velocity, -MaxVelocity, MaxVelocity);
+    void AutomaticStopCheck()
+    {
+        float distanceToTarget = Vector3.Distance(transform.position, targetObject.transform.position);
+        if (distanceToTarget <= safeDistance && !isStopping)
+        {
+            isStopping = true;
+            StartCoroutine(StopTrain());
+        }
+    }
 
-        // Move the train
-        transform.Translate(Vector3.right * Velocity * Time.deltaTime);
+    System.Collections.IEnumerator StopTrain()
+    {
+        while (currentSpeed > 0)
+        {
+            currentSpeed -= deceleration * Time.deltaTime;
+            yield return null;
+        }
+        currentSpeed = 0;
+        isStopping = false;
     }
 }
