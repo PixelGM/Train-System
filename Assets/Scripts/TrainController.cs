@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class TrainController : MonoBehaviour
 {
@@ -8,11 +10,11 @@ public class TrainController : MonoBehaviour
     public float deceleration = 5f;
     public float friction = 1f;
     public float minimumSafeDistance = 5f;
-
+    
     private float currentSpeed = 0f;
     private bool isStopping = false;
     public bool autoAccelerate = true;
-
+    
     void Update()
     {
         if (autoAccelerate)
@@ -27,6 +29,7 @@ public class TrainController : MonoBehaviour
         ApplyFriction();
         MoveTrain();
         AutomaticStopCheck();
+        KeyResetTrain();
     }
 
     void AutomaticAcceleration()
@@ -41,11 +44,11 @@ public class TrainController : MonoBehaviour
 
     void KeyAccelerate()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             currentSpeed += acceleration * Time.deltaTime;
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S))
         {
             currentSpeed -= deceleration * Time.deltaTime;
         }
@@ -77,6 +80,17 @@ public class TrainController : MonoBehaviour
             isStopping = true;
             autoAccelerate = false; // Disable automatic acceleration
             StartCoroutine(StopTrain());
+        }
+    }
+
+    void KeyResetTrain()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            // transform.position = initialPos;
+            // autoAccelerate = true;
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
